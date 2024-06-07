@@ -15,7 +15,6 @@ export default function CreateGame() {
 			<h1 className="font-bold">CreateGame</h1>
 			<div>
 				<input
-					className="px-4 py-2 mb-4 border rounded mr-4"
 					required type="text"
 					placeholder="Enter your username"
 					value={username}

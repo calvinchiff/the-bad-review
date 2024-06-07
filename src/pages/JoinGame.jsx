@@ -4,7 +4,7 @@ import React from "react";
 export default function JoinGame() {
 	return (
 		<div>
-			<h1 className="font-bold">JoinGame</h1>
+			<h1>JoinGame</h1>
 		</div>
 	);
 }

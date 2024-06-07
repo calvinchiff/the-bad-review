@@ -1,17 +1,17 @@
 // import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./components/Home";
-import CreateGame from "./components/CreateGame";
-import JoinGame from "./components/JoinGame";
+import Home from "./pages/Home";
+import CreateGame from "./pages/CreateGame";
+import JoinGame from "./pages/JoinGame";
 import "./App.css";
 
 function App() {
 	return (
 		<Router>
-			<div className="bg-red-300 min-h-screen">
+			<div className="bg">
 				<header>
 					<Link to="/" className="text-3xl font-bold text-blue-600">
-						The Bad Reviews
+						TheBadReviews
 					</Link>
 				</header>
 				<div className="flex flex-col items-center justify-center min-h-screen">
