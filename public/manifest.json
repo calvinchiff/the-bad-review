@@ -1,9 +1,9 @@
 {
-	"short_name": "React App",
-	"name": "Create React App Sample",
+	"short_name": "TheBadReview",
+	"name": "Create TheBadReview Sample",
 	"icons": [
 		{
-			"src": "logo.webp",
+			"src": "logo_resized_nobg.png",
 			"type": "image/webp",
 			"sizes": "192x192"
 		}
