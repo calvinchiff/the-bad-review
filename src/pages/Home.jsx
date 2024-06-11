@@ -1,13 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import LinkButton from "../components/LinkButton";
 
 export default function Home() {
+	const [isDisabled, setIsDisabled] = React.useState(true);
+
+	const handleChange = () => {
+		setIsDisabled(!isDisabled);
+	}
+
 	return (
 		<div>
 			<h1>Home</h1>
 			<div>
-				<Link to="/game/new">Create a game</Link>
-				<Link to="/game/join">Join a game</Link>
+				<input type="checkbox" onChange={handleChange} />
+				<LinkButton to="/game/new" name="Create a game" isDisabled={isDisabled} />
+				<LinkButton to="/game/join" name="Join a game" isDisabled={isDisabled} />
 			</div>
 		</div >
 	);

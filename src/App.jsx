@@ -8,19 +8,21 @@ import "./App.css";
 function App() {
 	return (
 		<Router>
-			<div className="bg">
-				<header>
-					<Link to="/" className="text-3xl font-bold text-blue-600">
-						TheBadReviews
+			<div className="App">
+				<header className="App-header">
+					<Link to="/">
+						<img className="App-logo" src="logo_resized_nobg.png" alt="TBR Logo" />
 					</Link>
 				</header>
-				<div className="flex flex-col items-center justify-center min-h-screen">
-					<Routes>
-						<Route path="/" element={<Home />} />
-						<Route path="/game/new" element={<CreateGame />} />
-						<Route path="/game/join" element={<JoinGame />} />
-						<Route path="*" element={<NotFound />} />
-					</Routes>
+				<div className="App-body">
+					<div className="card">
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route path="/game/new" element={<CreateGame />} />
+							<Route path="/game/join" element={<JoinGame />} />
+							<Route path="*" element={<NotFound />} />
+						</Routes>
+					</div>
 				</div>
 			</div>
 		</Router>
