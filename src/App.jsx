@@ -15,14 +15,12 @@ function App() {
 					</Link>
 				</header>
 				<div className="App-body">
-					<div className="card">
-						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/game/new" element={<CreateGame />} />
-							<Route path="/game/join" element={<JoinGame />} />
-							<Route path="*" element={<NotFound />} />
-						</Routes>
-					</div>
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path="/game/new" element={<CreateGame />} />
+						<Route path="/game/join" element={<JoinGame />} />
+						<Route path="*" element={<NotFound />} />
+					</Routes>
 				</div>
 			</div>
 		</Router>
