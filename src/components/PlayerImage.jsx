@@ -23,11 +23,11 @@ export default function PlayerImage({ onImageUpdate }) {
 
     return (
         // <div className="Image-container">PlayerImage</div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div >
             <div className="image"
                 style={{
                     background: image ? `url(${image}) center/cover` : 'rgba(0,0,0,0.05)',
-                    boxShadow: 'inset 0 0 10px rgba(0,0,0,0.3)',
+                    boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
                     cursor: image ? 'default' : 'pointer',
 
                 }}
@@ -41,6 +41,6 @@ export default function PlayerImage({ onImageUpdate }) {
                 style={{ display: 'none' }}
                 onChange={handleImageChange}
             />
-        </div >
+        </div>
     )
 }
