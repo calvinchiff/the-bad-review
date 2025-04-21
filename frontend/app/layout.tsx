@@ -56,7 +56,9 @@ export default function RootLayout({
 			>
 				<Header />
 				<div className="fixed inset-0 -z-10 bg-[#C21212]" />
-				<main className="flex-1 font-jersey-25 overflow-auto">{children}</main>
+				<main className="flex-1 font-jersey-25 overflow-auto h-full">
+					{children}
+				</main>
 				<Footer />
 			</body>
 		</html>
