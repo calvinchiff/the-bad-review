@@ -6,10 +6,10 @@ export default function Header() {
 		<header className="w-full h-30 flex items-center justify-center">
 			<Image
 				src="/TBR_Logo.png"
-				height="120"
-				width="120"
-				style={{ objectFit: "contain" }}
 				alt="TBR Logo"
+				width={120}
+				height={120}
+				unoptimized
 			/>
 		</header>
 	);
