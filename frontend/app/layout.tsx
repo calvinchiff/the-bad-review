@@ -51,10 +51,12 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${jersey.variable} font-jersey-25 antialiased`}>
+			<body
+				className={`${jersey.variable} min-h-screen font-jersey-25 antialiased flex flex-col overflow-hidden`}
+			>
 				<Header />
 				<div className="fixed inset-0 -z-10 bg-[#C21212]" />
-				{children}
+				<main className="flex-1 font-jersey-25 overflow-auto">{children}</main>
 				<Footer />
 			</body>
 		</html>

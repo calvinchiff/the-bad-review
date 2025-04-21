@@ -3,12 +3,12 @@ import Image from "next/image";
 
 export default function Header() {
 	return (
-		<header className="fixed w-full top-0 h-[15vh]">
+		<header className="w-full h-30 flex items-center justify-center">
 			<Image
 				src="/TBR_Logo.png"
-				sizes="100%"
+				height="120"
+				width="120"
 				style={{ objectFit: "contain" }}
-				fill
 				alt="TBR Logo"
 			/>
 		</header>
