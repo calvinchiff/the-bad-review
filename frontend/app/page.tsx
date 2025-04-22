@@ -144,8 +144,13 @@ export default function Home() {
 					)}
 				</div>
 				<button
+					disabled={username == ""}
 					onClick={handleCreate}
-					className="w-80 p-2 rounded-md cursor-pointer bg-black/10"
+					className={`w-80 p-2 rounded-md bg-black/10 ${
+						username == ""
+							? "opacity-50 cursor-not-allowed"
+							: "opacity-100 cursor-pointer"
+					}`}
 				>
 					Create game
 				</button>
