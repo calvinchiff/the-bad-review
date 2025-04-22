@@ -7,9 +7,12 @@ import { useRouter } from "next/navigation";
 export default function Home() {
 	const router = useRouter();
 
-	const [avatar, setAvatar] = useState("");
-	const [username, setUsername] = useState("");
-	const [letterboxdLink, setLetterboxdLink] = useState("");
+	const [user, setUser] = useState({
+		username: "",
+		letterboxdLink: "",
+		avatar: "",
+		reviews: [] as string[],
+	});
 	const [code, setCode] = useState("");
 
 	const [joinError, setJoinError] = useState("");
@@ -18,12 +21,7 @@ export default function Home() {
 	useEffect(() => {
 		const profile = localStorage.getItem("userProfile");
 		console.log("profile: " + profile);
-		if (profile) {
-			const { username, letterboxdLink, avatar } = JSON.parse(profile);
-			if (username) setUsername(username);
-			if (letterboxdLink) setLetterboxdLink(letterboxdLink);
-			if (avatar) setAvatar(avatar);
-		}
+		if (profile) setUser(JSON.parse(profile));
 	}, []);
 
 	const checkLetterboxdAccount = async (link: string) => {
@@ -36,6 +34,7 @@ export default function Home() {
 			setLetterboxdResponse("Letterboxd account not found");
 		} else {
 			setLetterboxdResponse("Account loaded ! 15 reviews found !");
+			setUser((prev) => ({...prev, reviews: ["review", "reviews2"]));
 		}
 	};
 
@@ -43,7 +42,8 @@ export default function Home() {
 		newData: Partial<{
 			username: string;
 			letterboxdLink: string;
-			avatar: string; // base64
+			avatar: string;
+			reviews: string[];
 		}>
 	) => {
 		const existing = localStorage.getItem("userProfile");
@@ -54,7 +54,7 @@ export default function Home() {
 
 	const handleAvatarChange = async (file: File) => {
 		const base64 = await fileToBase64(file);
-		setAvatar(base64);
+		setUser((prev) => ({ ...prev, avatar: base64 }));
 		updateLocalStorage({ avatar: base64 });
 	};
 
@@ -105,9 +105,9 @@ export default function Home() {
 				<div className="flex flex-row gap-4">
 					<label className="cursor-pointer">
 						<div className="w-24 h-24 bg-black/10 rounded-md overflow-hidden">
-							{avatar ? (
+							{user.avatar ? (
 								<Image
-									src={avatar}
+									src={user.avatar}
 									width={24}
 									height={24}
 									alt="Avatar preview"
@@ -140,10 +140,10 @@ export default function Home() {
 							type="text"
 							maxLength={18}
 							placeholder="Username"
-							value={username}
+							value={user.username}
 							onChange={(e) => {
 								const value = e.target.value;
-								setUsername(value);
+								setUser((prev) => ({ ...prev, username: value }));
 								updateLocalStorage({ username: value });
 							}}
 							className="w-52 p-2 rounded-md focus:outline-none bg-black/10"
@@ -152,17 +152,17 @@ export default function Home() {
 							<input
 								type="text"
 								placeholder="Letterboxd account link"
-								value={letterboxdLink}
+								value={user.letterboxdLink}
 								onChange={(e) => {
 									const value = e.target.value.toLowerCase();
-									setLetterboxdLink(value);
+									setUser((prev) => ({ ...prev, letterboxdLink: value }));
 									updateLocalStorage({ letterboxdLink: value });
 								}}
 								className="w-37 p-2 rounded-md focus:outline-none bg-black/10"
 							/>
 							<button
 								type="button"
-								onClick={() => checkLetterboxdAccount(letterboxdLink)}
+								onClick={() => checkLetterboxdAccount(user.letterboxdLink)}
 								className="p-2 bg-black/10 rounded cursor-pointer"
 							>
 								Check
@@ -202,10 +202,10 @@ export default function Home() {
 					)}
 				</div>
 				<button
-					disabled={username == ""}
+					disabled={user.username == ""}
 					onClick={handleCreate}
 					className={`w-80 p-2 rounded-md bg-black/10 ${
-						username == ""
+						user.username == ""
 							? "opacity-50 cursor-not-allowed"
 							: "opacity-100 cursor-pointer"
 					}`}
