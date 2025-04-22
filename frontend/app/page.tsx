@@ -9,12 +9,35 @@ export default function Home() {
 	const [letterboxdLink, setLetterboxdLink] = useState("");
 	const [code, setCode] = useState("");
 
-	const handleJoin = () => {
-		console.log("JOIN GAME");
-		console.log("Code:", code);
-		console.log("Username:", username);
-		console.log("Letterboxd:", letterboxdLink);
-		console.log("Avatar:", avatar);
+	const [joinError, setJoinError] = useState("");
+	const [letterboxdError, setLetterboxdError] = useState("");
+
+	const checkRoomExists = async (roomCode: string) => {
+		await new Promise((res) => setTimeout(res, 500));
+		return roomCode === "ABCDE";
+	};
+
+	const checkLetterboxdAccount = async (link: string) => {
+		setLetterboxdError("");
+		await new Promise((res) => setTimeout(res, 500));
+
+		if (!link.includes("letterboxd.com/")) {
+			setLetterboxdError("Invalid Letterboxd link.");
+		} else if (link != "letterboxd.com/calel44") {
+			setLetterboxdError("Letterboxd account not found");
+		}
+	};
+
+	const handleJoin = async () => {
+		setJoinError("");
+		const exists = await checkRoomExists(code);
+
+		if (exists) {
+			console.log("JOIN GAME");
+			// router.push(`/room/${code}`);
+		} else {
+			setJoinError("This room does not exist.");
+		}
 	};
 
 	const handleCreate = () => {
@@ -34,7 +57,7 @@ export default function Home() {
 			>
 				<div className="flex flex-row gap-4">
 					<label className="cursor-pointer">
-						<div className="w-24 h-24 bg-black/10 rounded overflow-hidden">
+						<div className="w-24 h-24 bg-black/10 rounded-md overflow-hidden">
 							{avatar ? (
 								<Image
 									src={URL.createObjectURL(avatar)}
@@ -71,16 +94,30 @@ export default function Home() {
 							onChange={(e) => setUsername(e.target.value)}
 							className="w-52 p-2 rounded-md focus:outline-none bg-black/10"
 						/>
-						<input
-							type="text"
-							placeholder="Letterboxd account link"
-							value={letterboxdLink}
-							onChange={(e) => setLetterboxdLink(e.target.value)}
-							className="w-52 p-2 rounded-md focus:outline-none bg-black/10"
-						/>
+						<div className="flex gap-2 relative items-center">
+							<input
+								type="text"
+								placeholder="Letterboxd account link"
+								value={letterboxdLink}
+								onChange={(e) => setLetterboxdLink(e.target.value)}
+								className="w-37 p-2 rounded-md focus:outline-none bg-black/10"
+							/>
+							<button
+								type="button"
+								onClick={() => checkLetterboxdAccount(letterboxdLink)}
+								className="p-2 bg-black/10 rounded cursor-pointer"
+							>
+								Check
+							</button>
+							{letterboxdError && (
+								<span className="absolute -bottom-4 left-2 text-red-500 text-sm">
+									{letterboxdError}
+								</span>
+							)}
+						</div>
 					</div>
 				</div>
-				<div className="flex flex-row gap-4">
+				<div className="relative flex flex-row gap-4">
 					<input
 						type="text"
 						maxLength={5}
@@ -100,6 +137,11 @@ export default function Home() {
 					>
 						Join game
 					</button>
+					{joinError && (
+						<span className="absolute -bottom-4 left-2 text-red-500 text-sm">
+							{joinError}
+						</span>
+					)}
 				</div>
 				<button
 					onClick={handleCreate}
