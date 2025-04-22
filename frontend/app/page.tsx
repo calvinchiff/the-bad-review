@@ -13,7 +13,7 @@ export default function Home() {
 	const [code, setCode] = useState("");
 
 	const [joinError, setJoinError] = useState("");
-	const [letterboxdError, setLetterboxdError] = useState("");
+	const [letterboxdResponse, setLetterboxdResponse] = useState("");
 
 	useEffect(() => {
 		const profile = localStorage.getItem("userProfile");
@@ -26,19 +26,16 @@ export default function Home() {
 		}
 	}, []);
 
-	const checkRoomExists = async (roomCode: string) => {
-		await new Promise((res) => setTimeout(res, 500));
-		return roomCode === "ABCDE";
-	};
-
 	const checkLetterboxdAccount = async (link: string) => {
-		setLetterboxdError("");
+		setLetterboxdResponse("");
 		await new Promise((res) => setTimeout(res, 500));
 
 		if (!link.includes("letterboxd.com/")) {
-			setLetterboxdError("Invalid Letterboxd link.");
+			setLetterboxdResponse("Invalid Letterboxd link.");
 		} else if (link != "letterboxd.com/calel44") {
-			setLetterboxdError("Letterboxd account not found");
+			setLetterboxdResponse("Letterboxd account not found");
+		} else {
+			setLetterboxdResponse("Account loaded ! 15 reviews found !");
 		}
 	};
 
@@ -61,19 +58,31 @@ export default function Home() {
 		updateLocalStorage({ avatar: base64 });
 	};
 
+	const checkRoomExists = async (roomCode: string) => {
+		await new Promise((res) => setTimeout(res, 500));
+		return roomCode === "ABCDE";
+	};
+
 	const handleJoin = async () => {
 		setJoinError("");
 		const exists = await checkRoomExists(code);
 
 		if (exists) {
-			router.push(`/room/`);
+			router.push(`/${code}`);
 		} else {
 			setJoinError("This room does not exist.");
 		}
 	};
 
-	const handleCreate = () => {
-		router.push(`/room/`);
+	const createRoom = async () => {
+		await new Promise((res) => setTimeout(res, 500));
+		const roomCode = "ABCDE";
+		return roomCode;
+	};
+
+	const handleCreate = async () => {
+		const roomCode = await createRoom();
+		router.push(`/${roomCode}`);
 	};
 
 	function fileToBase64(file: File): Promise<string> {
@@ -158,9 +167,9 @@ export default function Home() {
 							>
 								Check
 							</button>
-							{letterboxdError && (
+							{letterboxdResponse && (
 								<span className="absolute -bottom-4 left-2 text-red-500 text-sm">
-									{letterboxdError}
+									{letterboxdResponse}
 								</span>
 							)}
 						</div>
