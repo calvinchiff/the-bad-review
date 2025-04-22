@@ -25,7 +25,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="font-[family-name:var(--font-jersey-25)] mx-10 h-full">
+		<div className="font-[family-name:var(--font-jersey-25)] h-full">
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
@@ -73,7 +73,6 @@ export default function Home() {
 						/>
 						<input
 							type="text"
-							maxLength={18}
 							placeholder="Letterboxd account link"
 							value={letterboxdLink}
 							onChange={(e) => setLetterboxdLink(e.target.value)}
@@ -87,7 +86,7 @@ export default function Home() {
 						maxLength={5}
 						placeholder="Code to join room"
 						value={code}
-						onChange={(e) => setCode(e.target.value)}
+						onChange={(e) => setCode(e.target.value.toUpperCase())}
 						className="w-38 p-2 rounded-md focus:outline-none bg-black/10"
 					/>
 					<button
