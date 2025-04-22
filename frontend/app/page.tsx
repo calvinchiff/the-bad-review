@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+	const router = useRouter();
+
 	const [avatar, setAvatar] = useState("");
 	const [username, setUsername] = useState("");
 	const [letterboxdLink, setLetterboxdLink] = useState("");
@@ -11,6 +14,17 @@ export default function Home() {
 
 	const [joinError, setJoinError] = useState("");
 	const [letterboxdError, setLetterboxdError] = useState("");
+
+	useEffect(() => {
+		const profile = localStorage.getItem("userProfile");
+		console.log("profile: " + profile);
+		if (profile) {
+			const { username, letterboxdLink, avatar } = JSON.parse(profile);
+			if (username) setUsername(username);
+			if (letterboxdLink) setLetterboxdLink(letterboxdLink);
+			if (avatar) setAvatar(avatar);
+		}
+	}, []);
 
 	const checkRoomExists = async (roomCode: string) => {
 		await new Promise((res) => setTimeout(res, 500));
@@ -28,27 +42,51 @@ export default function Home() {
 		}
 	};
 
+	const updateLocalStorage = (
+		newData: Partial<{
+			username: string;
+			letterboxdLink: string;
+			avatar: string; // base64
+		}>
+	) => {
+		const existing = localStorage.getItem("userProfile");
+		const profile = existing ? JSON.parse(existing) : {};
+		const updatedProfile = { ...profile, ...newData };
+		localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
+	};
+
+	const handleAvatarChange = async (file: File) => {
+		const base64 = await fileToBase64(file);
+		setAvatar(base64);
+		updateLocalStorage({ avatar: base64 });
+	};
+
 	const handleJoin = async () => {
 		setJoinError("");
 		const exists = await checkRoomExists(code);
 
 		if (exists) {
-			console.log("JOIN GAME");
-			// router.push(`/room/${code}`);
+			router.push(`/room/`);
 		} else {
 			setJoinError("This room does not exist.");
 		}
 	};
 
 	const handleCreate = () => {
-		console.log("CREATE GAME");
-		console.log("Username:", username);
-		console.log("Letterboxd:", letterboxdLink);
-		console.log("Avatar:", avatar);
+		router.push(`/room/`);
 	};
 
+	function fileToBase64(file: File): Promise<string> {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onload = () => resolve(reader.result as string);
+			reader.onerror = reject;
+			reader.readAsDataURL(file);
+		});
+	}
+
 	return (
-		<div className="font-[family-name:var(--font-jersey-25)] h-full">
+		<div className="h-full font-[family-name:var(--font-jersey-25)]">
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
@@ -60,7 +98,7 @@ export default function Home() {
 						<div className="w-24 h-24 bg-black/10 rounded-md overflow-hidden">
 							{avatar ? (
 								<Image
-									src={URL.createObjectURL(avatar)}
+									src={avatar}
 									width={24}
 									height={24}
 									alt="Avatar preview"
@@ -81,7 +119,10 @@ export default function Home() {
 						<input
 							type="file"
 							accept="image/*"
-							onChange={(e) => setAvatar(e.target.files?.[0] || null)}
+							onChange={(e) => {
+								const file = e.target.files?.[0];
+								if (file) handleAvatarChange(file);
+							}}
 							className="hidden"
 						/>
 					</label>
@@ -91,7 +132,11 @@ export default function Home() {
 							maxLength={18}
 							placeholder="Username"
 							value={username}
-							onChange={(e) => setUsername(e.target.value)}
+							onChange={(e) => {
+								const value = e.target.value;
+								setUsername(value);
+								updateLocalStorage({ username: value });
+							}}
 							className="w-52 p-2 rounded-md focus:outline-none bg-black/10"
 						/>
 						<div className="flex gap-2 relative items-center">
@@ -99,7 +144,11 @@ export default function Home() {
 								type="text"
 								placeholder="Letterboxd account link"
 								value={letterboxdLink}
-								onChange={(e) => setLetterboxdLink(e.target.value)}
+								onChange={(e) => {
+									const value = e.target.value.toLowerCase();
+									setLetterboxdLink(value);
+									updateLocalStorage({ letterboxdLink: value });
+								}}
 								className="w-37 p-2 rounded-md focus:outline-none bg-black/10"
 							/>
 							<button
