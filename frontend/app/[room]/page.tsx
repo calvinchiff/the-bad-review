@@ -39,6 +39,10 @@ export default function Room() {
 		}
 	};
 
+	const removePlayer = (index: number) => {
+		setPlayers((prev) => prev.filter((_, i) => i !== index));
+	};
+
 	return (
 		<div className="max-h-full w-full flex flex-col items-center md:gap-2">
 			<p className="p-2">
@@ -55,9 +59,18 @@ export default function Room() {
 			</div>
 			<div className="grid grid-cols-4 md:grid-cols-6 grid-rows-3 md:grid-rows-2 gap-4 p-2">
 				{Array.from({ length: totalSlots }).map((_, i) => (
-					<div key={i}>
+					<div key={i} className="relative">
 						<AvatarHolder avatar={players[i]?.avatar || ""} />
-						<p className="h-6">{players[i]?.username || ""}</p>
+						<p className="h-6 text-center">{players[i]?.username || ""}</p>
+						{players[i] && (
+							<button
+								onClick={() => removePlayer(i)}
+								className="absolute -top-2 -right-2 bg-white rounded-full w-6 h-6 text-lg text-gray-400 cursor-pointer flex items-center justify-center shadow-md"
+								aria-label="Remove player"
+							>
+								×
+							</button>
+						)}
 					</div>
 				))}
 			</div>
