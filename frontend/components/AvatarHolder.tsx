@@ -11,7 +11,7 @@ export default function AvatarHolder({
 	placeholder = "/Avatar_Placeholder.png"
 }: AvatarProps) {
 	return (
-		<div className="w-24 md:w-28 h-24 md:h-28 bg-black/10 rounded-md overflow-hidden">
+		<div className="w-20 md:w-28 h-20 md:h-28 bg-black/10 rounded-md overflow-hidden">
 			<Image
 				src={avatar || placeholder}
 				width={36}

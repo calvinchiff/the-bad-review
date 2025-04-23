@@ -9,8 +9,9 @@ const mocked: Player[] = [
 ];
 
 export function getMockedPlayers(): Player[] {
-	const storedUser = localStorage.getItem("myProfile");
+	const storedUser = localStorage.getItem("userProfile");
 
+	console.log("user: " + storedUser);
 	if (!storedUser) return mocked;
 
 	const parsed = JSON.parse(storedUser);

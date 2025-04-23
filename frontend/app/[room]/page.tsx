@@ -8,6 +8,7 @@ export default function Room() {
 	const { room } = useParams();
 	const [copied, setCopied] = useState(false);
 	const [players, setPlayers] = useState<Player[]>([]);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	const totalSlots = 12;
 
@@ -44,8 +45,8 @@ export default function Room() {
 	};
 
 	return (
-		<div className="max-h-full w-full flex flex-col items-center md:gap-2">
-			<p className="p-2">
+		<div className="max-h-full w-full flex flex-col items-center md:gap-2 overflow-hidden">
+			<p className="">
 				{players.length} / {totalSlots} players
 			</p>
 			<div className="flex flex-row align-center justify-center gap-2">
@@ -57,12 +58,14 @@ export default function Room() {
 					{copied ? "Copied!" : "Copy"}
 				</button>
 			</div>
-			<div className="grid grid-cols-4 md:grid-cols-6 grid-rows-3 md:grid-rows-2 gap-4 p-2">
+			<div className="grid grid-cols-4 md:grid-cols-6 grid-rows-3 md:grid-rows-2 gap-4 py-2 md:p-2">
 				{Array.from({ length: totalSlots }).map((_, i) => (
 					<div key={i} className="relative">
 						<AvatarHolder avatar={players[i]?.avatar || ""} />
-						<p className="h-6 text-center">{players[i]?.username || ""}</p>
-						{players[i] && (
+						<p className="h-2 md:h-6 text-center">
+							{players[i]?.username || ""}
+						</p>
+						{isAdmin && players[i] && (
 							<button
 								onClick={() => removePlayer(i)}
 								className="absolute -top-2 -right-2 bg-white rounded-full w-6 h-6 text-lg text-gray-400 cursor-pointer flex items-center justify-center shadow-md"
@@ -74,7 +77,7 @@ export default function Room() {
 					</div>
 				))}
 			</div>
-			<button className="p-2 bg-black/10 rounded-md hover:bg-black/20 transition cursor-pointer">
+			<button className="p-4 bg-black/10 rounded-md hover:bg-black/20 transition cursor-pointer">
 				Play
 			</button>
 		</div>

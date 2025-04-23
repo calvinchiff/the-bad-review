@@ -28,7 +28,6 @@ export default function Home() {
 
 	useEffect(() => {
 		const profile = localStorage.getItem("userProfile");
-		console.log("profile: " + profile);
 		if (profile) setUser(JSON.parse(profile));
 	}, []);
 
@@ -52,20 +51,6 @@ export default function Home() {
 			setLetterboxdResponse("Account loaded ! 15 reviews found !");
 			updateUser({ reviews: ["review", "reviews2"] });
 		}
-	};
-
-	const updateLocalStorage = (
-		newData: Partial<{
-			username: string;
-			letterboxdLink: string;
-			avatar: string;
-			reviews: string[];
-		}>
-	) => {
-		const existing = localStorage.getItem("userProfile");
-		const profile = existing ? JSON.parse(existing) : {};
-		const updatedProfile = { ...profile, ...newData };
-		localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
 	};
 
 	const handleAvatarChange = async (file: File) => {
@@ -137,7 +122,7 @@ export default function Home() {
 							placeholder="Username"
 							value={user.username}
 							onChange={(e) => updateUser({ username: e.target.value })}
-							className="w-52 md:w-79 p-2 rounded-md focus:outline-none bg-black/10 text-center"
+							className="w-52 md:w-79 p-1 md:p-2 rounded-md focus:outline-none bg-black/10 text-center"
 						/>
 						<div className="flex gap-2 relative items-center">
 							<input
@@ -147,12 +132,12 @@ export default function Home() {
 								onChange={(e) =>
 									updateUser({ letterboxdLink: e.target.value.toLowerCase() })
 								}
-								className="w-37 md:w-59 p-2 rounded-md focus:outline-none bg-black/10"
+								className="w-39 md:w-59 p-1 md:p-2 rounded-md focus:outline-none bg-black/10"
 							/>
 							<button
 								type="button"
 								onClick={() => checkLetterboxdAccount(user.letterboxdLink)}
-								className="p-2 bg-black/10 rounded-md cursor-pointer"
+								className="p-1 md:p-2 bg-black/10 rounded-md cursor-pointer"
 							>
 								Check
 							</button>
