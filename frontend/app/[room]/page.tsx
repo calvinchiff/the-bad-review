@@ -14,6 +14,8 @@ export default function Room() {
 	const [currentRound, setCurrentRound] = useState(1);
 	const [timer, setTimer] = useState(20);
 	const [question, setQuestion] = useState<Question>(mockedQuestions[0]);
+	const [showOptions, setShowOptions] = useState(false);
+	const [freeAnswer, setFreeAnswer] = useState("");
 
 	const totalSlots = 12;
 
@@ -102,31 +104,53 @@ export default function Room() {
 					<p className="text-2xl">Round {currentRound} / 10</p>
 					<p className="text-lg">Time left: {timer}s</p>
 					<p className="text-xl mt-4">{question.question}</p>
-					{question.options ? (
+					{!showOptions ? (
+						<div className="flex flex-col items-center mt-4 gap-4">
+							<input
+								className="p-2 rounded bg-white/5 w-full max-w-md text-center focus:outline-none"
+								placeholder="Your answer"
+								value={freeAnswer}
+								onChange={(e) => setFreeAnswer(e.target.value)}
+							/>
+							{question.options.length > 0 && (
+								<button
+									onClick={() => setShowOptions(true)}
+									className="text-sm text-gray-300 underline hover:text-white cursor-pointer transition"
+								>
+									Show square (half points)
+								</button>
+							)}
+						</div>
+					) : (
 						<div className="grid grid-cols-2 gap-4 mt-4">
 							{question.options.map((opt, idx) => (
 								<button
 									key={idx}
-									className="bg-black/10 p-4 rounded hover:bg-black/20 transition cursor-pointer"
+									onClick={() => setFreeAnswer(opt)}
+									className={`p-4 rounded transition cursor-pointer
+			${
+				freeAnswer === opt
+					? "bg-white/20 border text-white font-bold"
+					: "bg-black/10 hover:bg-black/20"
+			}
+		`}
 								>
 									{opt}
 								</button>
 							))}
 						</div>
-					) : (
-						<input
-							className="p-2 mt-4 rounded bg-white/5 text-white w-full max-w-md"
-							placeholder="Your answer"
-						/>
 					)}
 					{isAdmin && (
 						<button
 							className="mt-8 bg-black/10 p-4 rounded hover:bg-black/20 transition cursor-pointer"
 							onClick={() => {
 								if (currentRound === 10) return setPhase("ranking");
+
 								setCurrentRound((r) => r + 1);
 								setQuestion(mockedQuestions[currentRound]);
 								setTimer(20);
+								setShowOptions(false);
+								setFreeAnswer("");
 							}}
 						>
 							Next round
