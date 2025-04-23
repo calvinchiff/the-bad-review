@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import AvatarHolder from "@/components/AvatarHolder";
 
 export default function Home() {
 	const router = useRouter();
@@ -118,16 +119,7 @@ export default function Home() {
 			>
 				<div className="flex flex-row gap-4">
 					<label className="cursor-pointer">
-						<div className="w-24 md:w-28 h-24 md:h-28 bg-black/10 rounded-md overflow-hidden">
-							<Image
-								src={user.avatar || "/Avatar_Placeholder.png"}
-								width={36}
-								height={36}
-								alt="Avatar preview"
-								unoptimized
-								className="w-full h-full object-cover"
-							/>
-						</div>
+						<AvatarHolder avatar={user.avatar} />
 						<input
 							type="file"
 							accept="image/*"
@@ -145,7 +137,7 @@ export default function Home() {
 							placeholder="Username"
 							value={user.username}
 							onChange={(e) => updateUser({ username: e.target.value })}
-							className="w-52 md:w-79 p-2  rounded-md focus:outline-none bg-black/10"
+							className="w-52 md:w-79 p-2 rounded-md focus:outline-none bg-black/10 text-center"
 						/>
 						<div className="flex gap-2 relative items-center">
 							<input
@@ -155,12 +147,12 @@ export default function Home() {
 								onChange={(e) =>
 									updateUser({ letterboxdLink: e.target.value.toLowerCase() })
 								}
-								className="w-37 md:w-59 p-2  rounded-md focus:outline-none bg-black/10"
+								className="w-37 md:w-59 p-2 rounded-md focus:outline-none bg-black/10"
 							/>
 							<button
 								type="button"
 								onClick={() => checkLetterboxdAccount(user.letterboxdLink)}
-								className="p-2  bg-black/10 rounded-md cursor-pointer"
+								className="p-2 bg-black/10 rounded-md cursor-pointer"
 							>
 								Check
 							</button>
@@ -184,7 +176,7 @@ export default function Home() {
 					<button
 						onClick={handleJoin}
 						disabled={!(code.length == 5)}
-						className={`w-38 md:w-46 p-2  rounded-md  bg-black/10 transition-opacity ${
+						className={`w-38 md:w-46 p-2 rounded-md  bg-black/10 transition-opacity ${
 							!(code.length == 5)
 								? "opacity-50 cursor-not-allowed"
 								: "opacity-100 cursor-pointer"
@@ -201,7 +193,7 @@ export default function Home() {
 				<button
 					disabled={user.username == ""}
 					onClick={handleCreate}
-					className={`w-80 md:w-96 p-2  rounded-md bg-black/10 ${
+					className={`w-80 md:w-96 p-2 rounded-md bg-black/10 ${
 						user.username == ""
 							? "opacity-50 cursor-not-allowed"
 							: "opacity-100 cursor-pointer"
