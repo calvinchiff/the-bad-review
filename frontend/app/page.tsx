@@ -7,11 +7,18 @@ import { useRouter } from "next/navigation";
 export default function Home() {
 	const router = useRouter();
 
-	const [user, setUser] = useState({
+	type UserProfile = {
+		username: string;
+		letterboxdLink: string;
+		avatar: string;
+		reviews: string[];
+	};
+
+	const [user, setUser] = useState<UserProfile>({
 		username: "",
 		letterboxdLink: "",
 		avatar: "",
-		reviews: [] as string[],
+		reviews: []
 	});
 	const [code, setCode] = useState("");
 
@@ -24,6 +31,14 @@ export default function Home() {
 		if (profile) setUser(JSON.parse(profile));
 	}, []);
 
+	const updateUser = (newData: Partial<UserProfile>) => {
+		setUser((prev) => {
+			const updated = { ...prev, ...newData };
+			localStorage.setItem("userProfile", JSON.stringify(updated));
+			return updated;
+		});
+	};
+
 	const checkLetterboxdAccount = async (link: string) => {
 		setLetterboxdResponse("");
 		await new Promise((res) => setTimeout(res, 500));
@@ -34,7 +49,7 @@ export default function Home() {
 			setLetterboxdResponse("Letterboxd account not found");
 		} else {
 			setLetterboxdResponse("Account loaded ! 15 reviews found !");
-			setUser((prev) => ({...prev, reviews: ["review", "reviews2"]));
+			updateUser({ reviews: ["review", "reviews2"] });
 		}
 	};
 
@@ -54,8 +69,7 @@ export default function Home() {
 
 	const handleAvatarChange = async (file: File) => {
 		const base64 = await fileToBase64(file);
-		setUser((prev) => ({ ...prev, avatar: base64 }));
-		updateLocalStorage({ avatar: base64 });
+		updateUser({ avatar: base64 });
 	};
 
 	const checkRoomExists = async (roomCode: string) => {
@@ -104,26 +118,15 @@ export default function Home() {
 			>
 				<div className="flex flex-row gap-4">
 					<label className="cursor-pointer">
-						<div className="w-24 h-24 bg-black/10 rounded-md overflow-hidden">
-							{user.avatar ? (
-								<Image
-									src={user.avatar}
-									width={24}
-									height={24}
-									alt="Avatar preview"
-									unoptimized
-									className="w-full h-full object-cover"
-								/>
-							) : (
-								<Image
-									src="/Avatar_Placeholder.png"
-									width={24}
-									height={24}
-									alt="Placeholder"
-									unoptimized
-									className="w-full h-full object-contain opacity-40 bg-black"
-								/>
-							)}
+						<div className="w-24 md:w-28 h-24 md:h-28 bg-black/10 rounded-md overflow-hidden">
+							<Image
+								src={user.avatar || "/Avatar_Placeholder.png"}
+								width={36}
+								height={36}
+								alt="Avatar preview"
+								unoptimized
+								className="w-full h-full object-cover"
+							/>
 						</div>
 						<input
 							type="file"
@@ -141,29 +144,23 @@ export default function Home() {
 							maxLength={18}
 							placeholder="Username"
 							value={user.username}
-							onChange={(e) => {
-								const value = e.target.value;
-								setUser((prev) => ({ ...prev, username: value }));
-								updateLocalStorage({ username: value });
-							}}
-							className="w-52 p-2 rounded-md focus:outline-none bg-black/10"
+							onChange={(e) => updateUser({ username: e.target.value })}
+							className="w-52 md:w-79 p-2  rounded-md focus:outline-none bg-black/10"
 						/>
 						<div className="flex gap-2 relative items-center">
 							<input
 								type="text"
 								placeholder="Letterboxd account link"
 								value={user.letterboxdLink}
-								onChange={(e) => {
-									const value = e.target.value.toLowerCase();
-									setUser((prev) => ({ ...prev, letterboxdLink: value }));
-									updateLocalStorage({ letterboxdLink: value });
-								}}
-								className="w-37 p-2 rounded-md focus:outline-none bg-black/10"
+								onChange={(e) =>
+									updateUser({ letterboxdLink: e.target.value.toLowerCase() })
+								}
+								className="w-37 md:w-59 p-2  rounded-md focus:outline-none bg-black/10"
 							/>
 							<button
 								type="button"
 								onClick={() => checkLetterboxdAccount(user.letterboxdLink)}
-								className="p-2 bg-black/10 rounded cursor-pointer"
+								className="p-2  bg-black/10 rounded-md cursor-pointer"
 							>
 								Check
 							</button>
@@ -182,12 +179,12 @@ export default function Home() {
 						placeholder="Code to join room"
 						value={code}
 						onChange={(e) => setCode(e.target.value.toUpperCase())}
-						className="w-38 p-2 rounded-md focus:outline-none bg-black/10"
+						className="w-38 md:w-46 p-2 text-center rounded-md focus:outline-none bg-black/10"
 					/>
 					<button
 						onClick={handleJoin}
 						disabled={!(code.length == 5)}
-						className={`w-38 p-2 rounded-md  bg-black/10 transition-opacity ${
+						className={`w-38 md:w-46 p-2  rounded-md  bg-black/10 transition-opacity ${
 							!(code.length == 5)
 								? "opacity-50 cursor-not-allowed"
 								: "opacity-100 cursor-pointer"
@@ -204,7 +201,7 @@ export default function Home() {
 				<button
 					disabled={user.username == ""}
 					onClick={handleCreate}
-					className={`w-80 p-2 rounded-md bg-black/10 ${
+					className={`w-80 md:w-96 p-2  rounded-md bg-black/10 ${
 						user.username == ""
 							? "opacity-50 cursor-not-allowed"
 							: "opacity-100 cursor-pointer"
