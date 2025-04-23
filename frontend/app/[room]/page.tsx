@@ -20,6 +20,8 @@ export default function Room() {
 
 	const totalSlots = 12;
 
+	const storedProfile = localStorage.getItem("userProfile");
+
 	useEffect(() => {
 		setPlayers(getMockedPlayers());
 	}, []);
@@ -92,15 +94,24 @@ export default function Room() {
 								<p className="h-2 md:h-6 text-center">
 									{players[i]?.username || ""}
 								</p>
-								{isAdmin && players[i] && (
-									<button
-										onClick={() => removePlayer(i)}
-										className="select-none absolute -top-2 -right-2 bg-white rounded-full w-6 h-6 text-lg text-gray-400 cursor-pointer flex items-center justify-center shadow-md"
-										aria-label="Remove player"
-									>
-										×
-									</button>
-								)}
+								{isAdmin &&
+									players[i] &&
+									(() => {
+										try {
+											const parsed = JSON.parse(storedProfile || "{}");
+											return parsed.username !== players[i].username;
+										} catch {
+											return true;
+										}
+									})() && (
+										<button
+											onClick={() => removePlayer(i)}
+											className="select-none absolute -top-2 -right-2 bg-white rounded-full w-6 h-6 text-lg text-gray-400 cursor-pointer flex items-center justify-center shadow-md"
+											aria-label="Remove player"
+										>
+											×
+										</button>
+									)}
 							</div>
 						))}
 					</div>
