@@ -133,6 +133,7 @@ export default function Room() {
 					<p className="text-2xl">Round {currentRound} / 10</p>
 					<p className="text-lg">Time left: {timer}s</p>
 					<p className="text-xl mt-4">{question.question}</p>
+					<p className="text-xl mt-4">{question.review}</p>
 					{!showOptions ? (
 						<div className="flex flex-col items-center mt-4 gap-4">
 							<input
