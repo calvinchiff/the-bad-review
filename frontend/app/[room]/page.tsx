@@ -16,12 +16,30 @@ export default function Room() {
 	const [question, setQuestion] = useState<Question>(mockedQuestions[0]);
 	const [showOptions, setShowOptions] = useState(false);
 	const [freeAnswer, setFreeAnswer] = useState("");
+	const [visibleCount, setVisibleCount] = useState(0);
 
 	const totalSlots = 12;
 
 	useEffect(() => {
 		setPlayers(getMockedPlayers());
 	}, []);
+
+	useEffect(() => {
+		if (phase !== "ranking") return;
+
+		setVisibleCount(0);
+		const interval = setInterval(() => {
+			setVisibleCount((prev) => {
+				if (prev >= players.length) {
+					clearInterval(interval);
+					return prev;
+				}
+				return prev + 1;
+			});
+		}, 3000);
+
+		return () => clearInterval(interval);
+	}, [phase, players.length]);
 
 	const handleCopy = async () => {
 		if (typeof room !== "string") return;
@@ -161,16 +179,25 @@ export default function Room() {
 
 			{phase === "ranking" && (
 				<>
-					<h2 className="text-3xl">🏆 Final Ranking</h2>
-					<ul className="mt-4">
-						{players.map((p, i) => (
-							<li key={p.username} className="p-2">
-								{i + 1}. {p.username}
-							</li>
-						))}
+					<h2 className="text-3xl text-center mb-4">🏆 Final Ranking</h2>
+
+					<ul className="mt-4 text-center">
+						{[...players]
+							.sort((a, b) => b.position - a.position)
+							.slice(0, visibleCount)
+							.reverse()
+							.map((p, i) => (
+								<li key={p.username} className="p-2 text-xl animate-fade-in">
+									{p.position}. {p.username}
+								</li>
+							))}
 					</ul>
-					{isAdmin && (
-						<button className="mt-8" onClick={() => setPhase("lobby")}>
+
+					{isAdmin && visibleCount >= players.length && (
+						<button
+							className="mt-8 p-4 bg-black/10 rounded-md hover:bg-black/20 transition cursor-pointer"
+							onClick={() => setPhase("lobby")}
+						>
 							Back to lobby
 						</button>
 					)}
