@@ -17,16 +17,24 @@ export default function Room() {
 	const [showOptions, setShowOptions] = useState(false);
 	const [freeAnswer, setFreeAnswer] = useState("");
 	const [visibleCount, setVisibleCount] = useState(0);
+	const [currentUser, setCurrentUser] = useState<Player | null>(null);
 
 	const totalSlots = 12;
-
-	const storedProfile = localStorage.getItem("userProfile");
 
 	useEffect(() => {
 		setPlayers(getMockedPlayers());
 	}, []);
 
 	useEffect(() => {
+		const profile = localStorage.getItem("userProfile");
+		if (profile) {
+			try {
+				const parsed = JSON.parse(profile);
+				setCurrentUser(parsed);
+			} catch (err) {
+				console.error("Failed to parse userProfile", err);
+			}
+		}
 		if (phase !== "ranking") return;
 
 		setVisibleCount(0);
@@ -96,14 +104,7 @@ export default function Room() {
 								</p>
 								{isAdmin &&
 									players[i] &&
-									(() => {
-										try {
-											const parsed = JSON.parse(storedProfile || "{}");
-											return parsed.username !== players[i].username;
-										} catch {
-											return true;
-										}
-									})() && (
+									currentUser?.username !== players[i].username && (
 										<button
 											onClick={() => removePlayer(i)}
 											className="select-none absolute -top-2 -right-2 bg-white rounded-full w-6 h-6 text-lg text-gray-400 cursor-pointer flex items-center justify-center shadow-md"
