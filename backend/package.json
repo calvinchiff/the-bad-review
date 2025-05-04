@@ -6,6 +6,9 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts"
 	},
+	"prisma": {
+		"seed": "node prisma/seed.js"
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
