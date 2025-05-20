@@ -1,0 +1,20 @@
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+
+# Ignore IDE files
+.vscode
+
+# Ignore envs
+.env
+.env.local
+
+# Cache / build
+dist
+build
+*.tsbuildinfo
+
+# Git
+.git
+.gitignore
