@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World');
+    res.send('Server is up !');
 })
 
 app.get('/movies', async (req, res) => {
