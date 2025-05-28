@@ -1,4 +1,4 @@
-export type Player  {
+export type Player = {
     id: string;
     username: string;
     letterboxd: string;
