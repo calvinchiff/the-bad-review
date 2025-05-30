@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Header() {
 	const router = useRouter();
+	const pathname = usePathname();
 
 	const handleLogoClick = () => {
+		if (pathname === "/") return;
+
 		const confirmed = window.confirm(
 			"Are you sure you want to leave the game and return to the homepage?"
 		);
