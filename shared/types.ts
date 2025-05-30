@@ -15,7 +15,7 @@ export type Question = {
     correctAnswer: string;
 }
 
-export type GameState = {
+export type Room = {
     roomId: string;
     players: Player[];
     questions: Question[];
