@@ -7,10 +7,10 @@
 		"strict": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"rootDir": "src",
 		"outDir": "dist",
 		"paths": {
-			"@shared/*": ["../shared/*"]
+			"@shared/*": ["../shared/*"],
+			"@/*": ["./*"]
 		}
 	},
 	"include": ["src", "jest.config.ts", "tests"]

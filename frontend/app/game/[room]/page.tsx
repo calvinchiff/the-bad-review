@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import AvatarHolder from "@/components/AvatarHolder";
-import { getMockedPlayers, Player } from "@/mock/users";
+// import { getMockedPlayers } from "@/mock/users";
+import { Player } from "@shared/types";
 import { mockedQuestions, Question } from "@/mock/questions";
+import { useSocket } from "@/hooks/useSocket";
 
 export default function Room() {
 	const { room } = useParams();
@@ -21,8 +23,10 @@ export default function Room() {
 
 	const totalSlots = 12;
 
+	const { leaveRoom } = useSocket();
+
 	useEffect(() => {
-		setPlayers(getMockedPlayers());
+		setPlayers([]);
 	}, []);
 
 	useEffect(() => {
@@ -79,6 +83,11 @@ export default function Room() {
 		setPlayers((prev) => prev.filter((_, i) => i !== index));
 	};
 
+	const handleLeaveRoom = () => {
+		const roomCode = room?.toString();
+		if (roomCode) leaveRoom(roomCode);
+	};
+
 	return (
 		<>
 			{phase === "lobby" && (
@@ -116,17 +125,25 @@ export default function Room() {
 							</div>
 						))}
 					</div>
-					<button
-						onClick={() => {
-							setPhase("game");
-							setCurrentRound(1);
-							setQuestion(mockedQuestions[0]);
-							setTimer(20);
-						}}
-						className="p-4 bg-black/10 rounded-md hover:bg-black/20 transition cursor-pointer"
-					>
-						Play
-					</button>
+					<div className="flex flex-row gap-2">
+						<button
+							onClick={handleLeaveRoom}
+							className="p-4 bg-black/20 rounded-md hover:bg-black/30 transition cursor-pointer"
+						>
+							Leave
+						</button>
+						<button
+							onClick={() => {
+								setPhase("game");
+								setCurrentRound(1);
+								setQuestion(mockedQuestions[0]);
+								setTimer(20);
+							}}
+							className="p-4 bg-black/10 rounded-md hover:bg-black/20 transition cursor-pointer"
+						>
+							Play
+						</button>
+					</div>
 				</div>
 			)}
 			{phase === "game" && (

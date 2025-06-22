@@ -4,6 +4,8 @@ import { PrismaClient } from '@prisma/client';
 const app = express();
 const prisma = new PrismaClient();
 
+app.use(express.json())
+
 app.get('/', (req: Request, res: Response) => {
     res.send('Server is up !');
 })

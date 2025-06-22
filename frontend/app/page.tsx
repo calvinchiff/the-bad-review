@@ -1,28 +1,24 @@
 "use client";
 
-import Image from "next/image";
+import { useSocket } from "@/hooks/useSocket";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import AvatarHolder from "@/components/AvatarHolder";
+import { Player } from "@shared/types";
 
 export default function Home() {
-	const router = useRouter();
+	// const router = useRouter();
+	const { connectAndJoin } = useSocket();
 
-	type UserProfile = {
-		username: string;
-		letterboxdLink: string;
-		avatar: string;
-		reviews: string[];
-	};
-
-	const [user, setUser] = useState<UserProfile>({
+	const [user, setUser] = useState<Player>({
+		id: "",
 		username: "",
-		letterboxdLink: "",
+		letterboxd: "",
 		avatar: "",
-		reviews: []
+		reviews: [],
+		score: 0
 	});
 	const [code, setCode] = useState("");
-
 	const [joinError, setJoinError] = useState("");
 	const [letterboxdResponse, setLetterboxdResponse] = useState("");
 
@@ -31,7 +27,7 @@ export default function Home() {
 		if (profile) setUser(JSON.parse(profile));
 	}, []);
 
-	const updateUser = (newData: Partial<UserProfile>) => {
+	const updateUser = (newData: Partial<Player>) => {
 		setUser((prev) => {
 			const updated = { ...prev, ...newData };
 			localStorage.setItem("userProfile", JSON.stringify(updated));
@@ -58,33 +54,6 @@ export default function Home() {
 		updateUser({ avatar: base64 });
 	};
 
-	const checkRoomExists = async (roomCode: string) => {
-		await new Promise((res) => setTimeout(res, 500));
-		return roomCode === "ABCDE";
-	};
-
-	const handleJoin = async () => {
-		setJoinError("");
-		const exists = await checkRoomExists(code);
-
-		if (exists) {
-			router.push(`/${code}`);
-		} else {
-			setJoinError("This room does not exist.");
-		}
-	};
-
-	const createRoom = async () => {
-		await new Promise((res) => setTimeout(res, 500));
-		const roomCode = "ABCDE";
-		return roomCode;
-	};
-
-	const handleCreate = async () => {
-		const roomCode = await createRoom();
-		router.push(`/${roomCode}`);
-	};
-
 	function fileToBase64(file: File): Promise<string> {
 		return new Promise((resolve, reject) => {
 			const reader = new FileReader();
@@ -93,6 +62,50 @@ export default function Home() {
 			reader.readAsDataURL(file);
 		});
 	}
+
+	// Create/Join Rooms logic
+
+	function handleCreate() {
+		connectAndJoin({
+			player: { ...user },
+			onError: (msg) => setJoinError(msg)
+		});
+	}
+
+	function handleJoin() {
+		connectAndJoin({
+			player: { ...user },
+			roomCode: code,
+			onError: (msg) => setJoinError(msg)
+		});
+	}
+
+	// const checkRoomExists = async (roomCode: string) => {
+	// 	await new Promise((res) => setTimeout(res, 500));
+	// 	return roomCode === "ABCDE";
+	// };
+
+	// const handleJoin = async () => {
+	// 	setJoinError("");
+	// 	const exists = await checkRoomExists(code);
+
+	// 	if (exists) {
+	// 		router.push(`/${code}`);
+	// 	} else {
+	// 		setJoinError("This room does not exist.");
+	// 	}
+	// };
+
+	// const createRoom = async () => {
+	// 	await new Promise((res) => setTimeout(res, 500));
+	// 	const roomCode = "ABCDE";
+	// 	return roomCode;
+	// };
+
+	// const handleCreate = async () => {
+	// 	const roomCode = await createRoom();
+	// 	router.push(`/game/${roomCode}`);
+	// };
 
 	return (
 		<div className="h-full font-[family-name:var(--font-jersey-25)]">
@@ -128,15 +141,15 @@ export default function Home() {
 							<input
 								type="text"
 								placeholder="Letterboxd account link"
-								value={user.letterboxdLink}
+								value={user.letterboxd}
 								onChange={(e) =>
-									updateUser({ letterboxdLink: e.target.value.toLowerCase() })
+									updateUser({ letterboxd: e.target.value.toLowerCase() })
 								}
 								className="w-39 md:w-59 p-1 md:p-2 rounded-md focus:outline-none bg-black/10"
 							/>
 							<button
 								type="button"
-								onClick={() => checkLetterboxdAccount(user.letterboxdLink)}
+								onClick={() => checkLetterboxdAccount(user.letterboxd)}
 								className="p-1 md:p-2 bg-black/10 rounded-md cursor-pointer"
 							>
 								Check
