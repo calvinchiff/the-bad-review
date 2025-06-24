@@ -21,8 +21,8 @@ export default function Header() {
 	return (
 		<header className="fixed md:top-10 w-full flex items-center justify-center">
 			<div
-				onClick={handleLogoClick}
-				className="cursor-pointer hover:opacity-80 transition"
+			// onClick={handleLogoClick}
+			// className="cursor-pointer hover:opacity-80 transition"
 			>
 				<Image
 					src="/TBR_Logo.png"
