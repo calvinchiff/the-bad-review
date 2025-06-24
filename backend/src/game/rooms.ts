@@ -24,6 +24,14 @@ export function createRoom(socket: Socket, player: Player) {
     return { success: true, roomCode };
 }
 
+export function getRooms() {
+    return rooms;
+}
+
+export function getRoom(roomCode: string) {
+    return rooms[roomCode];
+}
+
 export function joinRoom(socket: Socket, roomCode: string, player: Player) {
     const room = rooms[roomCode];
     if (!room) return { succes: false, message: "Room does not exist" };
@@ -36,7 +44,7 @@ export function joinRoom(socket: Socket, roomCode: string, player: Player) {
     return { success: true, roomCode }
 }
 
-export function leaveRoom(socket: Socket, roomCode: string, player: Player) {
+export function leaveRoom(socket: Socket, roomCode: string) {
     const room = rooms[roomCode];
     if (!room) return { success: false, message: "Room does not exist" };
 
