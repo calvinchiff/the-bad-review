@@ -13,8 +13,8 @@ export function setupHandlers(io: Server, socket: Socket) {
         callback(result);
     });
 
-    socket.on("leave_room", (roomCode: string, player: Player, callback) => {
-        const result = leaveRoom(socket, roomCode, player);
+    socket.on("leave_room", ({ roomCode }: { roomCode: string }, callback) => {
+        const result = leaveRoom(socket, roomCode);
         callback(result);
     })
 }

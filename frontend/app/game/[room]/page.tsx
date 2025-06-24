@@ -85,7 +85,7 @@ export default function Room() {
 
 	const handleLeaveRoom = () => {
 		const roomCode = room?.toString();
-		if (roomCode) leaveRoom(roomCode);
+		if (roomCode) leaveRoom({ roomCode });
 	};
 
 	return (

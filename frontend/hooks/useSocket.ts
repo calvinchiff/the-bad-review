@@ -2,13 +2,15 @@
 import { useEffect, useRef } from "react";
 import { getSocket } from "@/lib/socket";
 import { useRouter } from "next/navigation";
-import { Player } from "@shared/types"
+import { Player, Room } from "@shared/types"
 
 type JoinOrCreateOptions = {
     player: Player;
     roomCode?: string;
     onError?: (msg: string) => void;
 };
+
+type RoomOnlyOptions = { roomCode: string; onError?: (msg: string) => void };
 
 export function useSocket() {
     const socketRef = useRef(getSocket());
@@ -48,7 +50,7 @@ export function useSocket() {
         );
     };
 
-    const leaveRoom = (roomCode: string) => {
+    const leaveRoom = ({ roomCode, onError }: RoomOnlyOptions) => {
         const socket = socketRef.current;
         if (!socket.connected) return;
 
@@ -56,10 +58,10 @@ export function useSocket() {
             if (res.success) {
                 router.push('/');
             } else {
-                console.log(res.message || "Unkown error");
+                if (onError) return onError(res.message || "Unknown error");
+                console.log(res.message || "Unknown error");
             }
         });
-        socket.disconnect();
     }
 
     return {
