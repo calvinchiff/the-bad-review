@@ -5,6 +5,7 @@ export type Player = {
     avatar: string;
     score: number;
     reviews: string[];
+    position?: any;
 }
 
 export type Question = {
@@ -23,4 +24,6 @@ export type Room = {
     currentTimer: NodeJS.Timeout | null;
     currentQuestionIndex: number;
     started: boolean;
+    phase: "lobby" | "game" | "ranking";
+    admin: Player;
 }

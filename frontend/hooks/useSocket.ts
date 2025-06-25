@@ -37,24 +37,32 @@ export function useSocket() {
         const socket = socketRef.current;
         if (!socket.connected) socket.connect();
 
-        socket.emit(
-            roomCode ? "join_room" : "create_room",
-            { ...player, roomCode },
-            (res: { success: boolean; roomCode?: string; message?: string }) => {
-                if (res.success && res.roomCode) {
-                    router.push(`/game/${res.roomCode}`);
+        if (roomCode) {
+            socket.emit("join_room", roomCode, player, (res: { success: boolean; room: Room; message?: string }) => {
+                console.log(res)
+                if (res.success && res.room) {
+                    router.push(`/game/${res.room.roomId}`);
                 } else {
                     onError?.(res.message || "Unknown error");
                 }
-            }
-        );
+            });
+        } else {
+            socket.emit("create_room", player, (res: { success: boolean; room: Room; message?: string }) => {
+                console.log(res)
+                if (res.success && res.room) {
+                    router.push(`/game/${res.room.roomId}`);
+                } else {
+                    onError?.(res.message || "Unknown error");
+                }
+            });
+        }
     };
 
     const leaveRoom = ({ roomCode, onError }: RoomOnlyOptions) => {
         const socket = socketRef.current;
         if (!socket.connected) return;
 
-        socket.emit("leave_room", { roomCode }, (res: { success: boolean, message?: string }) => {
+        socket.emit("leave_room", roomCode, (res: { success: boolean, message?: string }) => {
             if (res.success) {
                 router.push('/');
             } else {
