@@ -22,6 +22,10 @@ app.get('/rooms', async (req, res) => {
     res.json(getRooms())
 })
 
+app.get('/room/:roomCode', async (req, res) => {
+    res.json(getRoom(req.params.roomCode))
+})
+
 app.use((err: any, req: any, res: any, next: any) => {
     console.error("Unhandled error:", err);
     res.status(500).json({ error: "Internal server error" });
